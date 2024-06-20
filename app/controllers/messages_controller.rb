@@ -9,9 +9,11 @@ class MessagesController < ApplicationController
    def create
      @room = Room.find(params[:room_id])
      @message = @room.messages.new(message_params)
+    #  binding.pry
      if @message.save
        redirect_to room_messages_path(@room)
      else
+      # p @message.errors.full_messages
        @messages = @room.messages.includes(:user)
        render :index, status: :unprocessable_entity
      end
@@ -21,5 +23,6 @@ class MessagesController < ApplicationController
  
    def message_params
     params.require(:message).permit(:content, :image).merge(user_id: current_user.id)
-   end
+  end
+
  end
